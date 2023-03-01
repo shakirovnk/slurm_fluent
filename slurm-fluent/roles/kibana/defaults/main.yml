@@ -1,0 +1,4 @@
+kibana_port: 5601
+kibana_host: "0.0.0.0"
+elastic_host: "localhost"
+kibana_log_path: "/var/log/kibana/kibana.log"

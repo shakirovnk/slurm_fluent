@@ -1,0 +1,12 @@
+fluentbit_daemon_mode: Off
+fluentbit_log_level: info
+fluentbit_http_server: Off
+fluentbit_http_listen: 0.0.0.0
+fluentbit_http_port: 2020
+
+fluentbit_inputs: 
+  - { "Name": "systemd", "Tag": "*"}
+
+fluentbit_outputs: 
+  - { "Name": "stdout", "Match": "*"}
+

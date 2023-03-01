@@ -1,0 +1,77 @@
+- name: Create group
+  group: 
+    name: "{{ prometheus_group }}"
+    state: present
+
+- name: Create user
+  user:  
+    name: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+
+- name: Create app dir
+  file:
+    path: "{{ prometheus_dir }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+
+- name: Create db dir
+  file: 
+    path: "{{ prometheus_storage_path }}"
+    state: directory
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+
+- name: Update and install prometheus
+  unarchive:
+    src:  https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz
+    dest: "/tmp"
+    copy: no
+    validate_certs: False
+
+- name: Move files to app dir
+  copy: 
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/{{ item }}"
+    dest: "{{ prometheus_dir }}/{{ item }}"
+    mode: 0755
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+  with_items:
+    - prometheus
+    - promtool
+    - console_libraries
+    - consoles
+
+- name: Prometheus daemon args
+  template:
+    src: prometheus.j2
+    dest: /etc/default/prometheus
+    mode: 0755
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+  notify: restart_prometheus
+
+- name: Prometheus configuration file
+  template:
+    src: prometheus.yml.j2
+    dest: "{{ prometheus_dir }}/prometheus.yml"
+    mode: 0755
+    owner: "{{ prometheus_user }}"
+    group: "{{ prometheus_group }}"
+  notify: restart_prometheus
+
+- name: Create prometheus daemon
+  template: 
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+    owner: root
+    group: root
+    mode: 0644
+ 
+- name: Start prometheus
+  systemd:
+    daemon_reload: true
+    name: prometheus
+    state: started
+    enabled: true
+

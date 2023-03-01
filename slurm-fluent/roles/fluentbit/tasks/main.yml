@@ -1,0 +1,25 @@
+---
+- name: Install repository
+  yum_repository:
+    name: TD_Agent_Bit
+    baseurl: http://packages.fluentbit.io/centos/7/$basearch/
+    gpgcheck: true
+    gpgkey: http://packages.fluentbit.io/fluentbit.key
+    description: Fluent bit repo
+    enabled: true
+    
+- name: Install package
+  package: 
+    name: td-agent-bit
+    state: present
+    update_cache: true
+    
+    
+- name: Set config
+  template: 
+    src: td-agent-bit.conf.j2
+    dest: /etc/td-agent-bit/td-agent-bit.conf
+    owner: root
+    group: root
+    mode: 0755
+  notify: restart_fluentbit

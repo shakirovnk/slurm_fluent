@@ -1,0 +1,20 @@
+- name: Install Kibana
+  yum: 
+    name: https://artifacts.elastic.co/downloads/kibana/kibana-7.6.1-x86_64.rpm
+    state: present
+
+- name: create log dir
+  file:
+    path: /var/log/kibana
+    state: directory
+    owner: kibana
+    group: kibana
+
+- name: Set configuration
+  template: 
+    src: kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+    mode: 0755
+    owner: root
+    group: root
+  notify: restart_kibana

@@ -1,0 +1,13 @@
+---
+
+- import_tasks: preflight.yml
+
+- import_tasks: install.yml
+
+- import_tasks: firewalld.yml
+
+- name: Ensure Node Exporter is enabled on boot
+  systemd:
+    daemon_reload: true
+    name: node_exporter
+    enabled: true
