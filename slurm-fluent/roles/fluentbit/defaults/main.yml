@@ -8,5 +8,4 @@ fluentbit_inputs:
   - { "Name": "systemd", "Tag": "*"}
 
 fluentbit_outputs: 
-  - { "Name": "stdout", "Match": "*"}
-
+  - { "Name": "es", "Match": "*", "Host": "localhost", "Port": "9200", "Index": "fluent-bit", "Type": "_doc", "Logstash_format": "On"}
