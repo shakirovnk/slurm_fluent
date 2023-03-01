@@ -1,22 +1,22 @@
 ---
-#- name: Install prometheus 
-#  hosts: prometheus
-#  become: true
-#  roles:
-#    - prometheus
+- name: Install prometheus 
+  hosts: prometheus
+  become: true
+  roles:
+    - prometheus
 
-#- name: Install node_exporter
-#  hosts: node_exporter
-#  become: true
-#  roles:
-#    -  node_exporter
+- name: Install node_exporter
+  hosts: node_exporter
+  become: true
+  roles:
+    -  node_exporter
     
-#- name: Install elasticsearch and kibana
-#  hosts: elastic
-#  become: true
-#  roles:
-#    - elasticsearch
-#    - kibana
+- name: Install elasticsearch and kibana
+  hosts: elastic
+  become: true
+  roles:
+    - elasticsearch
+    - kibana
     
 - name: Install fluentbit
   hosts: fluentbit
